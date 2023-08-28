@@ -10,3 +10,4 @@ AtividadesME918.proj que deve consistir dos seguintes arquivos:
 2. executa.R: script em R para a execução do arquivo simulador.R 
 3. registra.R: script em R para a guardar os resultados obtidos em executa.R
 4. .Renviron: Renviron com meu RA
+5. resultados: pastas chamada resultados, mas com arquivo .gitignore
