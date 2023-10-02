@@ -1,0 +1,3 @@
+arquivos:
+  - diamonds.json
+  - penguins.json
