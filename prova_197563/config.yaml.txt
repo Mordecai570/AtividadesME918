@@ -6,4 +6,4 @@ arquivos:
 – nome_funcao_2: Nome da Função 2 do pacote .
 – arquivo_entrada: Nome de um arquivo no formato .json dentro da pasta data.
 – arquivo_saida: Um nome para o arquivo de saída a ser salvo (sem a extensão .RData).
-– nome_coluna: Nome da coluna a ser substituída pelo valor ao quadrado.
+– nome_coluna: "carat","cut","color","clarity","depth","table","price","x","y","z"
