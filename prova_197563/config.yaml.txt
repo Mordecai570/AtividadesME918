@@ -1,3 +1,9 @@
 arquivos:
   - diamonds.json
   - penguins.json
+
+– nome_funcao_1: Nome da Função 1 do pacote.
+– nome_funcao_2: Nome da Função 2 do pacote .
+– arquivo_entrada: Nome de um arquivo no formato .json dentro da pasta data.
+– arquivo_saida: Um nome para o arquivo de saída a ser salvo (sem a extensão .RData).
+– nome_coluna: Nome da coluna a ser substituída pelo valor ao quadrado.
