@@ -1,5 +1,5 @@
-– nome_funcao_1: nome da função1
-– nome_funcao_2: nome da função1
+– nome_funcao_1: gerador_de_listas
+– nome_funcao_2: variável_quadratrica
 – arquivo_entrada: penguins.json
 – arquivo_saida: penguinson 
 – nome_coluna: "body_mass_g"
