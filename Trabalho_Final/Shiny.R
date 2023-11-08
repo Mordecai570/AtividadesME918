@@ -14,7 +14,7 @@ ui <-  navbarPage(selected = "df", theme = shinytheme("cerulean"),
                   "Projeto",
                   tabPanel("Primeira aba"),
                   tabPanel("Modelo", numericInput("x","caloria", value = 0 ), numericInput("y","gordura", value = 0),numericInput("z","proteina", value = 0 )),
-                  tabPanel("Pesquisa", selectInput(inputId = "Cereal", label = "Cereal favorito?",choices = df$name, selected = "All",multiple = FALSE), downloadButton(
+                  tabPanel("Pesquisa", icon = icon("magnifying-glass"), selectInput(inputId = "Cereal", label = "Cereal favorito?",choices = df$name, selected = "All",multiple = FALSE), downloadButton(
                              outputId = "downloadData",
                              label = "Download banco de dados"
                            )),
