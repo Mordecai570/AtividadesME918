@@ -25,7 +25,6 @@ ui <-  navbarPage(selected = "df", theme = shinytheme("cerulean"),
 )
 
 
-# Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
   output$downloadData <- downloadHandler(
