@@ -4,7 +4,8 @@ install.packages("caret")
 library(tidyverse)
 library(caret)
 
-dataset_path <- "C:/Users/Rafael/Desktop/TrabProdutos/Data/cereal.csv"
+
+dataset_path <- "https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal.csv"
 
 # Function to train, predict, evaluate, and update linear regression model
 train_and_predict <- function(dataset_path, update_model = FALSE, new_observation = NULL) {
