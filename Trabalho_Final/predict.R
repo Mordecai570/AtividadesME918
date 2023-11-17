@@ -1,74 +1,66 @@
 # Install and load necessary libraries
-install.packages("tidyverse")
-install.packages("caret")
+#install.packages("tidyverse")
+#install.packages("caret")
 library(tidyverse)
 library(caret)
 
+dataset_path <- "../Data/cereal.csv"
 
-dataset_path <- "https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal.csv"
-
-# Function to train, predict, evaluate, and update linear regression model
-train_and_predict <- function(dataset_path, update_model = FALSE, new_observation = NULL) {
+# Função que treina, avalia e salva o modelo 
+train_and_predict <- function(dataset_path) {
   
-  # Read the dataset
+  # Le os dados originais
   cereal_data <- read.csv(dataset_path)
   
-  # Check if a new observation is provided
+  # Checar se o df de novas observações está vazio 
   if (!is.null(new_observation)) {
     # Add the new observation to the dataset
     cereal_data <- rbind(cereal_data, new_observation)
   }
   
+  # remove a COLUNA name 
   if ("name" %in% colnames(cereal_data)) {
     cereal_data <- cereal_data[, !colnames(cereal_data) %in% c("name")]
   }
   
-  # Split the data into training and testing sets
-  set.seed(123)  # for reproducibility
+  # Divide os dados entre teste e treino
+  set.seed(123)
   split_index <- createDataPartition(cereal_data$rating, p = 0.8, list = FALSE)
   train_data <- cereal_data[split_index, ]
   test_data <- cereal_data[-split_index, ]
   
-  # Build a linear regression model
+  # Modelo de regressão linear 
   lm_model <- lm(rating ~ ., data = train_data)
   
-  # Make predictions on the test set
+  # Faz previsões com base no modelo 
   predictions <- predict(lm_model, newdata = test_data)
   
-  # Evaluate the model
+  # avaliação do modelo 
   mse <- mean((test_data$rating - predictions)^2)
   rmse <- sqrt(mse)
-  cat("Root Mean Squared Error (RMSE):", rmse, "\n")
+  cat("RMSE:", rmse, "\n")
   
-  # Print the coefficients to see their impact on the rating
+  # Printando os coeficientes 
   cat("Coefficients:\n")
   print(coef(lm_model))
   
-  # Save the model for future use
-  saveRDS(lm_model, "linear_model.rds")  # Change the file name as needed
-  
-  if (update_model) {
-    cat("Model updated with new observation.\n")
-  }
+  # Salvando o modelo na pasta Models
+  saveRDS(lm_model, "../Models/modelo_atual.rds")
 }
 
-# Example usage:
-# Replace "your_dataset.csv" with the actual file path
-# You can add new observations by providing the 'new_observation' argument
-# 
-train_and_predict(dataset_path, update_model = TRUE)
+# Como usar:
+# Basta rodar o comando abaixo para gerar e salvar o modelo :)
+train_and_predict(dataset_path)
 
-# Function to predict rating based on a given model and new observation
-predict_rating <- function(model, new_observation) {
+# Função que aplica o modelo gerado anteriormente para gerar um único resultado 
+predict_rating <- function(new_observation) {
+  model <- readRDS("../Models/modelo_atual.rds")
   prediction <- predict(model, newdata = new_observation)
   return(prediction)
 }
 
-# Example usage:
-# Load the saved model
-saved_model <- readRDS("linear_model.rds")  # Change the file name if needed
-
-# Create a new observation (replace with actual values)
+# A entrada da função deve ser do seguinte formato: 
+# estamos usando por padrão a estrutura de dataframe
 new_observation <- data.frame(
   name = "NewBrand",
   mfr = "N",
@@ -87,6 +79,7 @@ new_observation <- data.frame(
   cups = 0.8
 )
 
-# Predict the rating using the saved model and new observation
-predicted_rating <- predict_rating(saved_model, new_observation)
+#Chamada da função usando o objeto criado
+predicted_rating <- predict_rating(new_observation)
+#printando o resultado da função
 cat("Predicted Rating:", predicted_rating, "\n")
