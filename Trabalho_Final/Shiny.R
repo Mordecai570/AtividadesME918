@@ -6,11 +6,13 @@ library(shinydashboard)
 library(shinythemes)
 library(shinyWidgets)
 
-source("scripts.R")
+#source("scripts.R")
 
 df <- getURL("https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal.csv")
 
 df <- read.csv(text = df)
+
+df <- subset(df, select = -c(mfr,type,shelf, cups))
 
 # Assuming df is already defined
 
@@ -34,7 +36,6 @@ ui <- navbarPage(
                  numericInput("sugars", "Sugars", value = 0),
                  numericInput("potass", "Potassium", value = 0),
                  numericInput("vitamins", "Vitamins", value = 0),
-                 numericInput("shelf", "Shelf", value = 0),
                  numericInput("weight", "Weight", value = 0),
                  actionButton("submit", "Submit")
                ),
@@ -96,9 +97,7 @@ server <- function(input, output, session) {
       sugars = input$sugars,
       potass = input$potass,
       vitamins = input$vitamins,
-      shelf = input$shelf,
       weight = input$weight,
-      cups = input$cups,
       rating = input$rating
     )
     
@@ -215,3 +214,4 @@ server <- function(input, output, session) {
 }
 # Run the application
 shinyApp(ui, server)
+
