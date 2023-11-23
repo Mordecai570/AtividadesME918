@@ -6,12 +6,11 @@ library(shinydashboard)
 library(shinythemes)
 library(shinyWidgets)
 
+source("scripts.R")
+
 df <- getURL("https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal.csv")
 
 df <- read.csv(text = df)
-
-library(shiny)
-library(shinythemes)
 
 # Assuming df is already defined
 
@@ -19,28 +18,13 @@ library(shinythemes)
 ui <- navbarPage(
   selected = "df", theme = shinytheme("cerulean"),
   "Projeto",
-  tabPanel("Primeira aba"),
-  tabPanel("Modelo", 
-           numericInput("x", "caloria", value = 0), 
-           numericInput("y", "gordura", value = 0),
-           numericInput("z", "proteina", value = 0)
-  ),
-  tabPanel("Pesquisa", 
-           icon = icon("magnifying-glass"), 
-           selectInput(inputId = "Cereal", label = "Cereal favorito?", choices = df$name, selected = "All", multiple = FALSE),
-           downloadButton(
-             outputId = "downloadData",
-             label = "Download banco de dados"
-           )
-  ),
+  tabPanel("Sobre"),
   tabPanel("Cadastro",
            fluidPage(
              titlePanel("Inserir novas Obs"),
              sidebarLayout(
                sidebarPanel(
                  textInput("name", "Name"),
-                 textInput("mfr", "Manufacturer"),
-                 textInput("type", "Type"),
                  numericInput("calories", "Calories", value = 0),
                  numericInput("protein", "Protein", value = 0),
                  numericInput("fat", "Fat", value = 0),
@@ -52,17 +36,44 @@ ui <- navbarPage(
                  numericInput("vitamins", "Vitamins", value = 0),
                  numericInput("shelf", "Shelf", value = 0),
                  numericInput("weight", "Weight", value = 0),
-                 numericInput("cups", "Cups", value = 0),
-                 numericInput("rating", "Rating", value = 0),
                  actionButton("submit", "Submit")
                ),
                mainPanel(
-                 tableOutput("dataframeTable")
+                 tableOutput("dataframeTable"),
+                 downloadButton(outputId = "downloadData",label = "Download banco de dados")
                )
              )
            )
   ),
-  tabPanel("EAD")  
+  tabPanel("Estatísticas",
+           fluidPage(
+             titlePanel("Statistics"),
+             # Add your statistics visualization code here
+             # Example: 
+             plotOutput("caloriesPlot"),
+             plotOutput("carboPlot"),
+             plotOutput("proteinPlot")
+           )
+  ),
+  tabPanel("Comparações",
+           fluidPage(
+             titlePanel("Pesquise e Compare!"),
+             sidebarLayout(
+               sidebarPanel(
+                 selectInput(inputId = "searchName", label = "Cereal favorito?", choices = df$name, selected = "All", multiple = FALSE),
+                 actionButton("searchButton", "Procurar")
+               ),
+               mainPanel(
+                 textOutput("searchResult"),
+                 uiOutput("caloriesComparison"),
+                 uiOutput("sugarsComparison"),
+                 uiOutput("proteinComparison"),
+                 uiOutput("fatComparison"),
+                 
+               )
+             )
+           )
+  )
 )
 
 # Define Server
@@ -113,7 +124,94 @@ server <- function(input, output, session) {
       write.csv(df, file)
     }
   )
+  # Placeholder for statistics visualization (replace with your actual code)
+  output$caloriesPlot <- renderPlot({
+    hist(df_reactive()$calories, main = "Calories Distribution")
+  })
+  
+  output$carboPlot <- renderPlot({
+    hist(df_reactive()$carbo, main = "Carbohydrates Distribution")
+  })
+  
+  output$proteinPlot <- renderPlot({
+    hist(df_reactive()$protein, main = "Protein Distribution")
+  })
+  
+  # Placeholder for prediction logic (replace with your actual code)
+  observeEvent(input$predictButton, {
+    # Add your prediction logic here
+    # For demonstration purposes, just echoing the input
+    result <- paste("Predicted score for", input$newProductName, ":", input$newProductCalories + input$newProductCarbo + input$newProductProtein)
+    output$predictionResult <- renderText({
+      result
+    })
+  })
+  
+  # Search and Comparisons
+  output$searchResult <- renderText({
+    if (input$searchName %in% df$name) {
+      search_name <- input$searchName
+      result <- ""
+      selected_row <- df_reactive()[df_reactive()$name %in% search_name, ]
+      result
+    }
+  })
+  
+  output$caloriesComparison <- renderUI({
+    createStatBox("Calories", "calories", df_reactive())
+  })
+  
+  output$proteinComparison <- renderUI({
+    createStatBox("Protein", "protein", df_reactive())
+  })
+  
+  output$fatComparison <- renderUI({
+    createStatBox("Fat", "fat", df_reactive())
+  })
+  
+  output$sugarsComparison <- renderUI({
+    createStatBox("Sugars", "sugars", df_reactive())
+  })
+  
+  createStatBox <- function(label, column, data) {
+    if (!is.null(input$searchButton) && input$searchButton > 0) {
+      search_name <- input$searchName
+      selected_row <- data[data$name == search_name, ]
+      
+      if (nrow(selected_row) > 0) {
+        # Perform statistic comparison
+        comparison_data <- data[data$name != search_name, ]
+        
+        # Calculate the percentage difference from the mean for the selected statistic
+        mean_stat <- mean(comparison_data[[column]])
+        stat_difference <- ((selected_row[[column]] - mean_stat) / mean_stat) * 100
+        
+        # Determine letter and color based on the stat_difference
+        if (stat_difference < 0) {
+          letter <- 'A'
+          color <- '#87CEEB'  # Light Sky Blue
+        } else {
+          letter <- 'F'
+          color <- '#FFA07A'  # Light Salmon
+        }
+        
+        HTML(
+          paste0(
+            '<div style = "background-color: ', color,'; border: 2px solid #808080; border-radius: 10px; padding: 10px;">',
+            '<center>',
+            '<font style = "color: black; font-size: 24px;">', round(stat_difference, 2), '%</font>',
+            '<br>',
+            '<b>', label, '</b>',
+            '</center>',
+            '</div>'
+          )
+        )
+      } else {
+        HTML('<div>No data found for the specified name.</div>')
+      }
+    }
+  }
+  
 }
-
 # Run the application
 shinyApp(ui, server)
