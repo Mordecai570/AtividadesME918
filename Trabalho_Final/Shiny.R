@@ -89,8 +89,6 @@ server <- function(input, output, session) {
   observeEvent(input$submit, {
     new_row <- data.frame(
       name = input$name,
-      mfr = input$mfr,
-      type = input$type,
       calories = input$calories,
       protein = input$protein,
       fat = input$fat,
@@ -101,7 +99,8 @@ server <- function(input, output, session) {
       potass = input$potass,
       vitamins = input$vitamins,
       weight = input$weight,
-      rating = input$rating
+      rating = input$rating, #TODO: mudar rating para a previsão calculada com a formula em scripts
+      nationality = "BR"
     )
     
     if (nrow(df_reactive()) == 0) {
@@ -111,7 +110,7 @@ server <- function(input, output, session) {
     }
     
     # Salva a nova adição no novas_add.csv
-    write.csv(df_reactive(), "../Data/novas_add.csv", row.names = FALSE)
+    write.csv(df_reactive(), "../Data/cereal.csv", row.names = FALSE)
   })
   
   # Mostra o dataframe atualizado
@@ -214,8 +213,7 @@ server <- function(input, output, session) {
 
   # Placeholder for prediction logic (replace with your actual code)
   observeEvent(input$predictButton, {
-    # Add your prediction logic here
-    # For demonstration purposes, just echoing the input
+    #TODO: trocar o result pela função que preve os valores no arquivo scripts 
     result <- paste("Predicted score for", input$newProductName, ":", input$newProductCalories + input$newProductCarbo + input$newProductProtein)
     output$predictionResult <- renderText({
       result
