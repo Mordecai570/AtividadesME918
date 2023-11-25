@@ -46,16 +46,19 @@ ui <- navbarPage(
              )
            )
   ),
-  tabPanel("Estatísticas",
-           fluidPage(
-             titlePanel("Statistics"),
-             # Add your statistics visualization code here
-             # Example: 
-             plotOutput("caloriesPlot"),
-             plotOutput("carboPlot"),
-             plotOutput("proteinPlot")
-           )
-  ),
+        tabPanel("Estatísticas",
+                fluidRow(
+                  column(6,plotOutput("caloriesPlot")),
+                  column(6,plotOutput("proteinPlot")),
+                  column(6,plotOutput("fatPlot")),
+                  column(6, plotOutput("sodiumPlot")),
+                  column(6, plotOutput("fiberPlot")),
+                  column(6, plotOutput("carboPlot")),
+                  column(6,plotOutput("sugarsPlot")),
+                  column(6,plotOutput("potassPlot")),
+                  column(6,plotOutput("vitaminsPlot")),
+                 )
+),
   tabPanel("Comparações",
            fluidPage(
              titlePanel("Pesquise e Compare!"),
@@ -123,19 +126,92 @@ server <- function(input, output, session) {
       write.csv(df, file)
     }
   )
-  # Placeholder for statistics visualization (replace with your actual code)
+ # GRÁFICO:
+
   output$caloriesPlot <- renderPlot({
-    hist(df_reactive()$calories, main = "Calories Distribution")
+    hist(df_reactive()$calories, main = "Distriubuição das calorias",
+         col = "#BDECB6",
+         border = "white", 
+         alpha = 0.7,
+         xlab = "Calorias",
+         ylab = "Frequência")
   })
   
-  output$carboPlot <- renderPlot({
-    hist(df_reactive()$carbo, main = "Carbohydrates Distribution")
-  })
   
   output$proteinPlot <- renderPlot({
-    hist(df_reactive()$protein, main = "Protein Distribution")
+    hist(df_reactive()$protein, main = "Distriubuição da proteína",
+         col = "#BDECB6",
+         border = "white", 
+         alpha = 0.7,
+         xlab = "Proteína",
+         ylab = "Frequência")
   })
   
+   
+  output$fatPlot <- renderPlot({
+    hist(df_reactive()$fat, main = "Distriubuição das gorduras",
+         col = "#BDECB6",
+         border = "white", 
+         alpha = 0.7,
+         xlab = "Gorduras",
+         ylab = "Frequência")
+  })
+  
+  
+ output$sodiumPlot <- renderPlot({
+    hist(df_reactive()$sodium, main = "Distriubuição do sódio",
+         col = "#BDECB6",
+         border = "white", 
+         alpha = 0.7,
+         xlab = "Sódio",
+         ylab = "Frequência")
+ })
+
+ output$fiberPlot <- renderPlot({
+   hist(df_reactive()$fiber, main = "Distriubuição das fibras",
+        col = "#BDECB6",
+        border = "white", 
+        alpha = 0.7,
+        xlab = "Fibras",
+        ylab = "Frequência")
+ })
+ 
+ output$carboPlot <- renderPlot({
+   hist(df_reactive()$carbo, main = "Distriubuição da carboidrato",
+        col = "#BDECB6",
+        border = "white", 
+        alpha = 0.7,
+        xlab = "Carboidrato",
+        ylab = "Frequência")
+ })
+ 
+ output$sugarsPlot <- renderPlot({
+   hist(df_reactive()$sugars, main = "Distriubuição do açúcares",
+        col = "#BDECB6",
+        border = "white", 
+        alpha = 0.7,
+        xlab = "Açúcares",
+        ylab = "Frequência")
+ })
+ 
+ output$potassPlot <- renderPlot({
+   hist(df_reactive()$potass, main = "Distriubuição do potássio",
+        col = "#BDECB6",
+        border = "white", 
+        alpha = 0.7,
+        xlab = "Potássio",
+        ylab = "Frequência")
+ })
+ 
+ output$vitaminsPlot <- renderPlot({
+   hist(df_reactive()$vitamins, main = "Distriubuição das vitaminas",
+        col = "#BDECB6",
+        border = "white", 
+        alpha = 0.7,
+        xlab = "Vitaminas",
+        ylab = "Frequência")
+ })
+
   # Placeholder for prediction logic (replace with your actual code)
   observeEvent(input$predictButton, {
     # Add your prediction logic here
