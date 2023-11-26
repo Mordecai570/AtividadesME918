@@ -4,18 +4,14 @@
 library(tidyverse)
 library(caret)
 
-dataset_path <- "../Data/cereal.csv"
+dataset_path <- "../Data/cereal_ajustado.csv"
+df <- read_csv(dataset_path)
 
-# Função que treina, avalia e salva o modelo 
-train_and_predict <- function(dataset_path) {
-  
-  # Le os dados originais
-  cereal_data <- read.csv(dataset_path)
-  
-  # remove a COLUNA name 
-  if ("name" %in% colnames(cereal_data)) {
-    cereal_data <- cereal_data[, !colnames(cereal_data) %in% c("name")]
-  }
+train_and_predict <- function(cereal_data) {
+
+  # Remove columns "name" and "Nationality"
+  cols_to_remove <- c("name", "Nationality")
+  cereal_data <- cereal_data[, !colnames(cereal_data) %in% cols_to_remove]
   
   # Divide os dados entre teste e treino
   set.seed(123)
@@ -29,7 +25,7 @@ train_and_predict <- function(dataset_path) {
   # Faz previsões com base no modelo 
   predictions <- predict(lm_model, newdata = test_data)
   
-  # avaliação do modelo 
+  # Avaliação do modelo 
   mse <- mean((test_data$rating - predictions)^2)
   rmse <- sqrt(mse)
   cat("RMSE:", rmse, "\n")
@@ -44,14 +40,19 @@ train_and_predict <- function(dataset_path) {
 
 # Como usar:
 # Basta rodar o comando abaixo para gerar e salvar o modelo :)
-train_and_predict(dataset_path)
+train_and_predict(df)
 
 # Função que aplica o modelo gerado anteriormente para gerar um único resultado 
 predict_rating <- function(new_observation) {
   model <- readRDS("../Models/modelo_atual.rds")
   prediction <- predict(model, newdata = new_observation)
-  return(prediction)
+  
+  # Extract the numeric value from the named vector
+  numeric_prediction <- as.numeric(prediction[1])
+  
+  return(numeric_prediction)
 }
+
 
 # A entrada da função deve ser do seguinte formato: 
 # estamos usando por padrão a estrutura de dataframe
