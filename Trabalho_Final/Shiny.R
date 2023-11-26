@@ -8,7 +8,7 @@ library(shinyWidgets)
 
 #source("scripts.R")
 
-df <- getURL("https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal.csv")
+df <- getURL("https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal_ajustado.csv")
 
 df <- read.csv(text = df)
 
