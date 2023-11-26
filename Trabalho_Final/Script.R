@@ -4,8 +4,8 @@
 library(tidyverse)
 library(caret)
 
-dataset_path <- "../Data/cereal_ajustado.csv"
-df <- read_csv(dataset_path)
+# dataset_path <- "../Data/cereal_ajustado.csv"
+# df <- read_csv(dataset_path)
 
 train_and_predict <- function(cereal_data) {
 
@@ -40,7 +40,7 @@ train_and_predict <- function(cereal_data) {
 
 # Como usar:
 # Basta rodar o comando abaixo para gerar e salvar o modelo :)
-train_and_predict(df)
+# train_and_predict(df)
 
 # Função que aplica o modelo gerado anteriormente para gerar um único resultado 
 predict_rating <- function(new_observation) {
@@ -56,21 +56,21 @@ predict_rating <- function(new_observation) {
 
 # A entrada da função deve ser do seguinte formato: 
 # estamos usando por padrão a estrutura de dataframe
-new_observation <- data.frame(
-  name = "NewBrand",
-  calories = 100,
-  protein = 3,
-  fat = 1,
-  sodium = 200,
-  fiber = 5,
-  carbo = 15,
-  sugars = 5,
-  potass = 200,
-  vitamins = 25,
-  shelf = 3
-)
-
-#Chamada da função usando o objeto criado
-predicted_rating <- predict_rating(new_observation)
-#printando o resultado da função
-cat("Predicted Rating:", predicted_rating, "\n")
+# new_observation <- data.frame(
+#   name = "NewBrand",
+#   calories = 100,
+#   protein = 3,
+#   fat = 1,
+#   sodium = 200,
+#   fiber = 5,
+#   carbo = 15,
+#   sugars = 5,
+#   potass = 200,
+#   vitamins = 25,
+#   shelf = 3
+# )
+# 
+# #Chamada da função usando o objeto criado
+# predicted_rating <- predict_rating(new_observation)
+# #printando o resultado da função
+# cat("Predicted Rating:", predicted_rating, "\n")
