@@ -30,8 +30,14 @@ ui <- navbarPage(
                     style = "background-color: #cef3c4; padding: 40px; border-radius: 5px; box-shadow: 0px 0px 5px 0px #ccc;"
              ), 
            )),
-  tabPanel("Cadastro",
+ tabPanel("Cadastro",
            fluidPage(
+             tags$head(
+               tags$style(HTML("#additional_input {
+               background-color: white !important;
+              }
+             "))
+             ),
              titlePanel(""),
              sidebarLayout(
                sidebarPanel(
@@ -48,7 +54,10 @@ ui <- navbarPage(
                  numericInput("sugars", "Sugars", value = 0),
                  numericInput("potass", "Potassium", value = 0),
                  numericInput("vitamins", "Vitamins", value = 0),
-                 actionButton("submit", "Registrar"),
+                 fluidRow(
+                   textInput("additional_input", " "),
+                   actionButton("submit", "Registrar")
+                 ),
                  div(
                    img(src = "imgtabela.png", width = "400px", height = "1800px")
                  ),
@@ -143,6 +152,7 @@ server <- function(input, output, session) {
       sugars = input$sugars,
       potass = input$potass,
       vitamins = input$vitamins,
+      additional_input = input$additional_input,
       rating = NA,
       Nationality = "BR"
     )
