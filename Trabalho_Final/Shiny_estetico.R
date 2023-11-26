@@ -271,7 +271,7 @@ server <- function(input, output, session) {
   })
   
   output$caloriesComparison <- renderUI({
-    createStatBox("Calories", "calories", df_reactive())
+    createStatBox2("Calories", "calories", df_reactive())
   })
   
   output$proteinComparison <- renderUI({
@@ -279,11 +279,11 @@ server <- function(input, output, session) {
   })
   
   output$fatComparison <- renderUI({
-    createStatBox("Fat", "fat", df_reactive())
+    createStatBox2("Fat", "fat", df_reactive())
   })
   
   output$sugarsComparison <- renderUI({
-    createStatBox("Sugars", "sugars", df_reactive())
+    createStatBox2("Sugars", "sugars", df_reactive())
   })
   
   #funcao para as proteinas porque elas fazem bem 
