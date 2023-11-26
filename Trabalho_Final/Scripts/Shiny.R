@@ -172,89 +172,103 @@ server <- function(input, output, session) {
     }
   )
  # GRÁFICO:
-
+  fill_colors <- c("US" = "#B22234", "BR" = "#009c3b")
   output$caloriesPlot <- renderPlot({
-    hist(df_reactive()$calories, main = "Distriubuição das calorias",
-         col = "#BDECB6",
-         border = "white", 
-         alpha = 0.7,
-         xlab = "Calorias",
-         ylab = "Frequência")
+    ggplot(cereal, aes(x = calories, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Quantidade de Calorias", y = "") +
+      scale_fill_manual(values = fill_colors) +
+      theme_minimal() +
+      labs(title = "Calorias") +
+      theme(plot.title = element_text(hjust = 0.5))
   })
   
   
   output$proteinPlot <- renderPlot({
-    hist(df_reactive()$protein, main = "Distriubuição da proteína",
-         col = "#BDECB6",
-         border = "white", 
-         alpha = 0.7,
-         xlab = "Proteína",
-         ylab = "Frequência")
+    ggplot(cereal, aes(x = protein, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Gramas de Proteínas", y = "") +
+      scale_fill_manual(values = fill_colors) +
+      theme_minimal() +
+      labs(title = "Proteínas") +
+      theme(plot.title = element_text(hjust = 0.5))
   })
   
    
   output$fatPlot <- renderPlot({
-    hist(df_reactive()$fat, main = "Distriubuição das gorduras",
-         col = "#BDECB6",
-         border = "white", 
-         alpha = 0.7,
-         xlab = "Gorduras",
-         ylab = "Frequência")
+    ggplot(cereal, aes(x = fat, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Gramas de Gorduras", y = "") +
+      scale_fill_manual(values = fill_colors) +
+      theme_minimal() +
+      labs(title = "Gorduras") +
+      theme(plot.title = element_text(hjust = 0.5))
   })
   
   
  output$sodiumPlot <- renderPlot({
-    hist(df_reactive()$sodium, main = "Distriubuição do sódio",
-         col = "#BDECB6",
-         border = "white", 
-         alpha = 0.7,
-         xlab = "Sódio",
-         ylab = "Frequência")
+   ggplot(cereal, aes(x = sodium, fill = Nationality)) +
+     geom_density(alpha = 0.5, position = "identity", color = "black") +
+     labs(x = "Miligramas de Sódio", y = "") +
+     scale_fill_manual(values = fill_colors) +
+     theme_minimal() +
+     labs(title = "Sódio") +
+     theme(plot.title = element_text(hjust = 0.5))
  })
 
  output$fiberPlot <- renderPlot({
-   hist(df_reactive()$fiber, main = "Distriubuição das fibras",
-        col = "#BDECB6",
-        border = "white", 
-        alpha = 0.7,
-        xlab = "Fibras",
-        ylab = "Frequência")
+   ggplot(cereal, aes(x = fiber, fill = Nationality)) +
+     geom_density(alpha = 0.5, position = "identity", color = "black") +
+     labs(x = "Gramas de Fibras", y = "") +
+     scale_fill_manual(values = fill_colors) +
+     theme_minimal() +
+     labs(title = "Fibras") +
+     theme(plot.title = element_text(hjust = 0.5))
  })
  
  output$carboPlot <- renderPlot({
-   hist(df_reactive()$carbo, main = "Distriubuição da carboidrato",
-        col = "#BDECB6",
-        border = "white", 
-        alpha = 0.7,
-        xlab = "Carboidrato",
-        ylab = "Frequência")
+   
+   ggplot(cereal, aes(x = carbo, fill = Nationality)) +
+     geom_density(alpha = 0.5, position = "identity", color = "black") +
+     labs(x = "Gramas de Carboidratos Complexos", y = "") +
+     scale_fill_manual(values = fill_colors) +
+     theme_minimal() +
+     labs(title = "Carboidratos") +
+     theme(plot.title = element_text(hjust = 0.5))
+     
+   
+   
  })
  
  output$sugarsPlot <- renderPlot({
-   hist(df_reactive()$sugars, main = "Distriubuição do açúcares",
-        col = "#BDECB6",
-        border = "white", 
-        alpha = 0.7,
-        xlab = "Açúcares",
-        ylab = "Frequência")
+   
+   ggplot(cereal, aes(x = sugars, fill = Nationality)) +
+     geom_density(alpha = 0.5, position = "identity", color = "black") +
+     labs(x = "Gramas de Açúcares", y = "") +
+     theme_minimal() +
+     labs(title = "Açúcar") +
+     theme(plot.title = element_text(hjust = 0.5)) +
+     scale_fill_manual(values = fill_colors) 
  })
  
  output$potassPlot <- renderPlot({
-   hist(df_reactive()$potass, main = "Distriubuição do potássio",
-        col = "#BDECB6",
-        border = "white", 
-        alpha = 0.7,
-        xlab = "Potássio",
-        ylab = "Frequência")
+   ggplot(cereal, aes(x = potass, fill = Nationality)) +
+     geom_density(alpha = 0.5, position = "identity", color = "black") +
+     labs(x = "Miligramas de Potássio ", y = "") +
+     scale_fill_manual(values = fill_colors) +
+     theme_minimal() +
+     labs(title = "Potássio") +
+     theme(plot.title = element_text(hjust = 0.5))
  })
  
  output$vitaminsPlot <- renderPlot({
-   hist(df_reactive()$vitamins, main = "Distriubuição das vitaminas",
-        col = "#BDECB6",
-        border = "white", 
-        alpha = 0.7,
-        xlab = "Vitaminas",
-        ylab = "Frequência")
+   ggplot(cereal, aes(x = vitamins, fill = Nationality)) +
+     geom_density(alpha = 0.5, position = "identity", color = "black") +
+     labs(x = "Quantidades de Vitaminas de Minerais em % quando comparado ao valor recomendado pela FDA", y = "") +
+     scale_fill_manual(values = fill_colors) +
+     theme_minimal() +
+     labs(title = "Vitaminas") +
+     theme(plot.title = element_text(hjust = 0.5))
  })
   
   # Search and Comparisons
