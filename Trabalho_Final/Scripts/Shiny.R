@@ -8,14 +8,14 @@ library(shinyWidgets)
 
 source("script.R")
 
-#df <- getURL("https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal_ajustado.csv")
-#df <- read.csv(text = df)
+cereal <- getURL("https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal_ajustado.csv")
+cereal <- read.csv(text = cereal)
 
-df <- read.csv("../Data/cereal.csv")
+cereal <- read.csv("../Data/cereal.csv")
 
 # Define UI
 ui <- navbarPage(
-  selected = "df", theme = shinytheme("paper"),
+  selected = "cereal", theme = shinytheme("paper"),
   title = div("", img(src = "menu.png", id = "simulation", height = "60px",width = "1000px",style = "position: relative; margin:-15px 0px; display:right-align;")),
   tabPanel("Sobre",
            fluidRow(
@@ -24,20 +24,14 @@ ui <- navbarPage(
                       img(src = "sobre.png", width = "1000px", height = "3000px")
                     ),
                     tags$a(href = "https://github.com/Mordecai570/AtividadesME918/tree/main/Trabalho_Final", target = "_blank",
-                           tags$i(class = "fab fa-github fa-3x"),  # Font Awesome GitHub icon class
+                           tags$i(class = "fab fa-github fa-3x"),  #fonte de letra
                            " GitHub"
                     ),
                     style = "background-color: #cef3c4; padding: 40px; border-radius: 5px; box-shadow: 0px 0px 5px 0px #ccc;"
              ), 
            )),
- tabPanel("Cadastro",
+  tabPanel("Cadastro",
            fluidPage(
-             tags$head(
-               tags$style(HTML("#additional_input {
-               background-color: white !important;
-              }
-             "))
-             ),
              titlePanel(""),
              sidebarLayout(
                sidebarPanel(
@@ -54,10 +48,8 @@ ui <- navbarPage(
                  numericInput("sugars", "Sugars", value = 0),
                  numericInput("potass", "Potassium", value = 0),
                  numericInput("vitamins", "Vitamins", value = 0),
-                 fluidRow(
-                   textInput("additional_input", " "),
-                   actionButton("submit", "Registrar")
-                 ),
+                 actionButton("submit", "Registrar"),
+                 uiOutput("predictedRating"),
                  div(
                    img(src = "imgtabela.png", width = "400px", height = "1800px")
                  ),
@@ -66,7 +58,7 @@ ui <- navbarPage(
                mainPanel(
                  tableOutput("dataframeTable"),
                  downloadButton(outputId = "downloadData", label = "Download banco de dados"),
-                 # Adding CSS styles
+                 # Usa CSS para deixar bonito
                  style = "background-color: #cef3c4; padding: 20px; border-radius: 5px; box-shadow: 0px 0px 5px 0px #ccc;"
                )
              )
@@ -90,12 +82,12 @@ ui <- navbarPage(
              titlePanel(""),
              sidebarLayout(
                sidebarPanel(
-                 selectInput(inputId = "searchName", label = "Escolha um cereal e compare ele com todos os outros!", choices = df$name, selected = "All", multiple = FALSE),
+                 selectInput(inputId = "searchName", label = "Escolha um cereal e compare ele com todos os outros!", choices = cereal$name, selected = "All", multiple = FALSE),
                  actionButton("searchButton", "Procurar"),
                  div(
                    img(src = "compara.png", width = "400px", height = "300px")
                  ),
-                 # Adding CSS styles
+                 # Usa CSS para deixar bonito
                  style = "padding: 20px; background-color: #cef3c4; border-radius: 5px; box-shadow: 0px 0px 5px 0px #ccc;"
                ),
                mainPanel(
@@ -104,20 +96,17 @@ ui <- navbarPage(
                  uiOutput("sugarsComparison"),
                  uiOutput("proteinComparison"),
                  uiOutput("fatComparison"),
-                 # Adding CSS styles
+                 # Usa CSS para deixar bonito
                  style = "padding: 20px; background-color: #cef3c4; border-radius: 5px; box-shadow: 0px 0px 5px 0px #ccc;"
                )
              )
            )
   ),
   tags$style(HTML(".navbar-default { background-color: #e5c1c1; }")),
+ 
   
-  # tags$head for additional CSS/JavaScript
-  tags$head(
-    tags$link(rel = "stylesheet", href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"),
-    tags$style(HTML("
-      /* Additional CSS styles */
-    ")),
+  
+
     
     tags$script('
       $(document).on("shiny:inputchanged", function(event) {
@@ -127,20 +116,22 @@ ui <- navbarPage(
         }
       });
     ')
-  )
+  
+
 )
 
-# Define Server
+
+# Servidor
 server <- function(input, output, session) {
-  # Reactive values for the dataframe
-  df_reactive <- reactiveVal(df)
+  # Valores reativos 
+  cereal_reactive <- reactiveVal(cereal)
   
-  # Função para inserir valores no df
+  # Função para inserir valores no cereal
   observeEvent(input$submit, {
-    # Get the current data frame
-    current_df <- df_reactive()
+    # Pega o df atual
+    current_cereal <- cereal_reactive()
     
-    # Create a new row without the "rating" column
+    # Novo registro
     new_row <- data.frame(
       name = input$name,
       calories = input$calories,
@@ -152,33 +143,37 @@ server <- function(input, output, session) {
       sugars = input$sugars,
       potass = input$potass,
       vitamins = input$vitamins,
-      additional_input = input$additional_input,
       rating = NA,
       Nationality = "BR"
     )
     
-    # Call the train_and_predict and predict_rating functions
+    # Predicao
     
-    train_and_predict(current_df)
+    train_and_predict(current_cereal)
     new_row$rating = predict_rating(new_row)
     
-    # Check if the data frame is empty
-    df_reactive(rbind(current_df, new_row))
+    # checa se o df esta vazio
+    cereal_reactive(rbind(current_cereal, new_row))
     
-    # Salva a nova adição no novas_add.csv
-    write.csv(df_reactive(), "../Data/cereal.csv", row.names = FALSE)
+    # Adiciona o registro
+    write.csv(cereal_reactive(), "../Data/cereal.csv", row.names = FALSE)
+    
+    output$predictedRating <- renderText({
+      rating <- round(predict_rating(new_row),2)
+      paste("A nota do seu cereal é ", rating)
+    })
   })
   
   # Mostra o dataframe atualizado
   output$dataframeTable <- renderTable({
-    df_reactive()
+    cereal_reactive()
   })
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("df_", Sys.Date(), ".csv", sep="")
+      paste("cereal_", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
-      write.csv(df, file)
+      write.csv(cereal, file)
     }
   )
  # GRÁFICO:
@@ -281,30 +276,30 @@ server <- function(input, output, session) {
      theme(plot.title = element_text(hjust = 0.5))
  })
   
-  # Search and Comparisons
+  # Compara
   output$searchResult <- renderText({
-    if (input$searchName %in% df$name) {
+    if (input$searchName %in% cereal$name) {
       search_name <- input$searchName
       result <- ""
-      selected_row <- df_reactive()[df_reactive()$name %in% search_name, ]
+      selected_row <- cereal_reactive()[cereal_reactive()$name %in% search_name, ]
       result
     }
   })
   
   output$caloriesComparison <- renderUI({
-    createStatBox2("Calories", "calories", df_reactive())
+    createStatBox2("Calories", "calories", cereal_reactive())
   })
   
   output$proteinComparison <- renderUI({
-    createStatBox("Protein", "protein", df_reactive())
+    createStatBox("Protein", "protein", cereal_reactive())
   })
   
   output$fatComparison <- renderUI({
-    createStatBox2("Fat", "fat", df_reactive())
+    createStatBox2("Fat", "fat", cereal_reactive())
   })
   
   output$sugarsComparison <- renderUI({
-    createStatBox2("Sugars", "sugars", df_reactive())
+    createStatBox2("Sugars", "sugars", cereal_reactive())
   })
   
   #funcao para as proteinas porque elas fazem bem 
@@ -314,15 +309,15 @@ server <- function(input, output, session) {
       selected_row <- data[data$name == search_name, ]
       
       if (nrow(selected_row) > 0) {
-        # Perform statistic comparison
+        # compara
         comparison_data <- data[data$name != search_name, ]
         
-        # Calculate the percentage difference from the mean for the selected statistic
+        # calcula diferenca em porcentagem 
         mean_stat <- mean(comparison_data[[column]])
         stat_difference <- ((selected_row[[column]] - mean_stat) / mean_stat) * 100
         
         
-        # Determine color based on the stat_difference
+        # Muda a cor 
         if (stat_difference < 0) {
           intensity <- 190*abs(stat_difference)
           color <-  paste0("rgb(", intensity*0.5, ",50 ,97)") # ruim 
@@ -354,14 +349,14 @@ server <- function(input, output, session) {
       selected_row <- data[data$name == search_name, ]
       
       if (nrow(selected_row) > 0) {
-        # Perform statistic comparison
+        # Compara 
         comparison_data <- data[data$name != search_name, ]
         
-        # Calculate the percentage difference from the mean for the selected statistic
+        # calcula diferenca em porcentagem 
         mean_stat <- mean(comparison_data[[column]])
         stat_difference <- ((selected_row[[column]] - mean_stat) / mean_stat) * 100
         
-        # Determine color based on the stat_difference
+        # muda a cor 
         if (stat_difference < 0) {
           intensity <- 210*abs(stat_difference)
           color <- paste0("rgb(167,171 ,", intensity*0.5, ")") # bom 
@@ -387,6 +382,6 @@ server <- function(input, output, session) {
     }
   }
 }
-# Run the application
+# Roda 
 shinyApp(ui, server)
 
