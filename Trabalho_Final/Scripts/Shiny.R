@@ -8,9 +8,6 @@ library(shinyWidgets)
 
 source("script.R")
 
-cereal <- getURL("https://raw.githubusercontent.com/Mordecai570/AtividadesME918/main/Trabalho_Final/cereal_ajustado.csv")
-cereal <- read.csv(text = cereal)
-
 cereal <- read.csv("../Data/cereal.csv")
 
 # Define UI
@@ -73,7 +70,6 @@ ui <- navbarPage(
              column(6, plotOutput("fiberPlot")),
              column(6, plotOutput("carboPlot")),
              column(6,plotOutput("sugarsPlot")),
-             column(6,plotOutput("potassPlot")),
              column(6,plotOutput("vitaminsPlot")),
            )
   ),
@@ -103,12 +99,12 @@ ui <- navbarPage(
            )
   ),
   tags$style(HTML(".navbar-default { background-color: #e5c1c1; }")),
- 
   
   
-
-    
-    tags$script('
+  
+  
+  
+  tags$script('
       $(document).on("shiny:inputchanged", function(event) {
         if (event.name.endsWith("_color")) {
           var columnName = event.name.replace("_color", "");
@@ -117,7 +113,7 @@ ui <- navbarPage(
       });
     ')
   
-
+  
 )
 
 
@@ -176,7 +172,7 @@ server <- function(input, output, session) {
       write.csv(cereal, file)
     }
   )
- # GRÁFICO:
+  # GRÁFICO:
   fill_colors <- c("US" = "#B22234", "BR" = "#009c3b")
   output$caloriesPlot <- renderPlot({
     ggplot(cereal, aes(x = calories, fill = Nationality)) +
@@ -199,7 +195,7 @@ server <- function(input, output, session) {
       theme(plot.title = element_text(hjust = 0.5))
   })
   
-   
+  
   output$fatPlot <- renderPlot({
     ggplot(cereal, aes(x = fat, fill = Nationality)) +
       geom_density(alpha = 0.5, position = "identity", color = "black") +
@@ -211,70 +207,58 @@ server <- function(input, output, session) {
   })
   
   
- output$sodiumPlot <- renderPlot({
-   ggplot(cereal, aes(x = sodium, fill = Nationality)) +
-     geom_density(alpha = 0.5, position = "identity", color = "black") +
-     labs(x = "Miligramas de Sódio", y = "") +
-     scale_fill_manual(values = fill_colors) +
-     theme_minimal() +
-     labs(title = "Sódio") +
-     theme(plot.title = element_text(hjust = 0.5))
- })
-
- output$fiberPlot <- renderPlot({
-   ggplot(cereal, aes(x = fiber, fill = Nationality)) +
-     geom_density(alpha = 0.5, position = "identity", color = "black") +
-     labs(x = "Gramas de Fibras", y = "") +
-     scale_fill_manual(values = fill_colors) +
-     theme_minimal() +
-     labs(title = "Fibras") +
-     theme(plot.title = element_text(hjust = 0.5))
- })
- 
- output$carboPlot <- renderPlot({
-   
-   ggplot(cereal, aes(x = carbo, fill = Nationality)) +
-     geom_density(alpha = 0.5, position = "identity", color = "black") +
-     labs(x = "Gramas de Carboidratos Complexos", y = "") +
-     scale_fill_manual(values = fill_colors) +
-     theme_minimal() +
-     labs(title = "Carboidratos") +
-     theme(plot.title = element_text(hjust = 0.5))
-     
-   
-   
- })
- 
- output$sugarsPlot <- renderPlot({
-   
-   ggplot(cereal, aes(x = sugars, fill = Nationality)) +
-     geom_density(alpha = 0.5, position = "identity", color = "black") +
-     labs(x = "Gramas de Açúcares", y = "") +
-     theme_minimal() +
-     labs(title = "Açúcar") +
-     theme(plot.title = element_text(hjust = 0.5)) +
-     scale_fill_manual(values = fill_colors) 
- })
- 
- output$potassPlot <- renderPlot({
-   ggplot(cereal, aes(x = potass, fill = Nationality)) +
-     geom_density(alpha = 0.5, position = "identity", color = "black") +
-     labs(x = "Miligramas de Potássio ", y = "") +
-     scale_fill_manual(values = fill_colors) +
-     theme_minimal() +
-     labs(title = "Potássio") +
-     theme(plot.title = element_text(hjust = 0.5))
- })
- 
- output$vitaminsPlot <- renderPlot({
-   ggplot(cereal, aes(x = vitamins, fill = Nationality)) +
-     geom_density(alpha = 0.5, position = "identity", color = "black") +
-     labs(x = "Quantidades de Vitaminas de Minerais em % quando comparado ao valor recomendado pela FDA", y = "") +
-     scale_fill_manual(values = fill_colors) +
-     theme_minimal() +
-     labs(title = "Vitaminas") +
-     theme(plot.title = element_text(hjust = 0.5))
- })
+  output$sodiumPlot <- renderPlot({
+    ggplot(cereal, aes(x = sodium, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Miligramas de Sódio", y = "") +
+      scale_fill_manual(values = fill_colors) +
+      theme_minimal() +
+      labs(title = "Sódio") +
+      theme(plot.title = element_text(hjust = 0.5))
+  })
+  
+  output$fiberPlot <- renderPlot({
+    ggplot(cereal, aes(x = fiber, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Gramas de Fibras", y = "") +
+      scale_fill_manual(values = fill_colors) +
+      theme_minimal() +
+      labs(title = "Fibras") +
+      theme(plot.title = element_text(hjust = 0.5))
+  })
+  
+  output$carboPlot <- renderPlot({
+    
+    ggplot(cereal, aes(x = carbo, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Gramas de Carboidratos Complexos", y = "") +
+      scale_fill_manual(values = fill_colors) +
+      theme_minimal() +
+      labs(title = "Carboidratos") +
+      theme(plot.title = element_text(hjust = 0.5))
+    
+  })
+  
+  output$sugarsPlot <- renderPlot({
+    
+    ggplot(cereal, aes(x = sugars, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Gramas de Açúcares", y = "") +
+      theme_minimal() +
+      labs(title = "Açúcar") +
+      theme(plot.title = element_text(hjust = 0.5)) +
+      scale_fill_manual(values = fill_colors) 
+  })
+  
+  output$vitaminsPlot <- renderPlot({
+    ggplot(cereal, aes(x = vitamins, fill = Nationality)) +
+      geom_density(alpha = 0.5, position = "identity", color = "black") +
+      labs(x = "Quantidades de Vitaminas de Minerais em % quando comparado ao valor recomendado pela FDA", y = "") +
+      scale_fill_manual(values = fill_colors) +
+      theme_minimal() +
+      labs(title = "Vitaminas") +
+      theme(plot.title = element_text(hjust = 0.5))
+  })
   
   # Compara
   output$searchResult <- renderText({
@@ -384,4 +368,3 @@ server <- function(input, output, session) {
 }
 # Roda 
 shinyApp(ui, server)
-
